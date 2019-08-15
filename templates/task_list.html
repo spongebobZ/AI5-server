@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <title>TASK LIST</title>
+    <style type="text/css">
+        p,input,legend,div{
+            text-align: center;
+            font-family: 'Microsoft YaHei UI'
+        }
+        button{
+            text-align: center;
+            background-color: bisque;
+            color: darkgoldenrod;
+            <!--font-size: larger;-->
+            font-family: 'Microsoft YaHei UI'
+        }
+        body{
+            background:url(../static/robot.png)  no-repeat center bottom;
+            background-attachment:fixed;
+            background-color: #46cca7;
+			}
+		.topless {
+            position: absolute;
+            top: 5%;
+            left: 45%;
+        }
+        .bottomless {
+            position: absolute;
+            top: 70%;
+            left: 45%;
+        }
+        .midheigh {
+            position: absolute;
+            top: 25%;
+            left: 25%;
+        }
+
+    </style>
+
+</head>
+<body>
+<div class="topless">
+    <h1 style="color: white">AI5, find any thing !</h1>
+</div>
+<!--<div class="topless">-->
+    <!--<form action="/taskInfo/<task_id>" method="get">-->
+        <!--<p style="float:left;"><input name="taskID" placeholder="taskID"></p>-->
+        <!--<p style="float:left;">-->
+            <!--<button type="submit">query</button>-->
+        <!--</p>-->
+    <!--</form>-->
+<!--</div>-->
+
+<div class="midheigh">
+    <table style="color: white" width="1000" border="1" cellpadding="10">
+        <caption style="color: white">running tasks</caption>
+        <tbody id="taskList">
+        </tbody>
+
+    </table>
+</div>
+<div class="bottomless">
+    <form action="/newTask" method="get">
+        <p>
+            <button type="submit">new task >></button>
+        </p>
+    </form>
+</div>
+
+
+</body>
+
+<script src="/static/js/jquery.js"></script>
+<script type="text/javascript">
+        window.onload=function(){
+            $.ajax({
+                type:"get",
+                url:"/taskList",
+                dataType:"json",
+                success:function(data){
+                    var tableData = "<tr style='width:1000px'><th>taskID</th><th>startTime</th><th>status</th><th>operation</th></tr>";
+                    for(var i=0;i<data.length;i++){
+                        var taskID = data[i].taskID;
+                        var submitTime = data[i].submit_time;
+                        var status = data[i].status;
+                        tableData+="<tr><td>"+taskID+"</td>\
+                                    <td>"+submitTime+"</td><td>"+status+"</td>\
+                                    <td><form action='/taskInfo/"+taskID+"' method='get'>\
+                                    <p style='float:left;'><button type='submit'>info</button></p>\
+                                    </form><form action='/killTask/"+taskID+"' method='get'>\
+                                    <p style='float:left;'><button type='submit'>kill</button></p>\
+                                    </form></td></tr>";
+                }
+                $("#taskList").html(tableData);
+            }
+
+            });}
+
+
+</script>
+</html>

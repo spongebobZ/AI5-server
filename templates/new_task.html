@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>NEW TASK</title>
+    <style type="text/css">
+        p,input,legend,div{
+            text-align: center;
+            font-family: 'Microsoft YaHei UI'
+        }
+        button{
+            text-align: center;
+            background-color: bisque;
+            color: darkgoldenrod;
+            <!--font-size: larger;-->
+            font-family: 'Microsoft YaHei UI'
+        }
+        body{
+            background:url(../static/robot.png)  no-repeat center bottom;
+            background-attachment:fixed;
+            background-color: #46cca7;
+			}
+		.topless {
+            position: absolute;
+            top: 20%;
+        }
+        .topmid {
+            position: absolute;
+            top: 50%;
+        }
+
+
+
+
+
+
+
+
+    </style>
+</head>
+<body>
+{% if message %}
+<p style="color:red">{{ message }}</p>
+{% endif %}
+<p style="color: orange">please upload wanted people images and input an watcher video url and matchMinThreshold</p>
+<form action="/newTask" method="post" enctype=multipart/form-data class="topless">
+
+    <div>
+        <input name="file1" type="file">
+        <input name="file2" type="file">
+        <input name="file3" type="file">
+        <input name="file4" type="file">
+        <input name="file5" type="file">
+        <input name="file6" type="file">
+        <input name="file7" type="file">
+        <input name="file8" type="file">
+        <input name="file9" type="file">
+        <input name="file10" type="file">
+        <!--<input type=submit value=Upload>-->
+        <!--<p>-->
+        <!--<button type="submit">start upload</button>-->
+        <!--</p>-->
+    </div>
+    <p><input name="videoUrl" placeholder="videoUrl" size="100"></p>
+    <p><input name="matchThreshold" placeholder="matchThreshold"></p>
+    <p><input name="description" placeholder="description" size="100"></p>
+    <p>
+        <button type="submit">create</button>
+    </p>
+</form>
+
+</body>
+</html>

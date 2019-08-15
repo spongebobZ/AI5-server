@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>create success</title>
+    <style type="text/css">
+        p,input,legend,div{
+            text-align: center;
+            font-family: 'Microsoft YaHei UI'
+        }
+        button{
+            text-align: center;
+            background-color: bisque;
+            color: darkgoldenrod;
+            <!--font-size: larger;-->
+            font-family: 'Microsoft YaHei UI'
+        }
+        body{
+            background:url(../static/robot.png)  no-repeat center bottom;
+            background-attachment:fixed;
+            background-color: #46cca7;
+			}
+		.topless {
+            position: absolute;
+            top: 20%;
+        }
+
+
+
+
+    </style>
+</head>
+<body>
+<h1 style="color: white">create task success, taskID: {{ taskID }}</h1>
+<form action="/taskInfo/{{ taskID }}" method="get">
+    <p>
+        <button type="submit">see task info</button>
+    </p>
+</form>
+<form action="/" method="get">
+    <p>
+        <button type="submit">back task list</button>
+    </p>
+</form>
+</body>
+</html>
