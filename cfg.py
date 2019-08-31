@@ -9,14 +9,14 @@ class Config:
 
 
 config = Config()
-config.db_user = 'root'
-config.db_pwd = '123456'
+config.db_user = ''
+config.db_pwd = ''
 config.db_host = 'stand-server'
 config.ai_db = 'AI5'
 config.task_table = 't_tasks'
 config.ai_home = '/data/AI5/'
-config.push_task_script = 'push-match-job.sh'
-config.kill_task_script = 'kill-match-job.sh'
+config.push_task_script = 'push-job.sh'
+config.kill_task_script = 'kill-job.sh'
 config.spark_log = 'spark-log.log'
 config.task_limit = 1
 config.workers = ['master', 'slave1', 'slave2']

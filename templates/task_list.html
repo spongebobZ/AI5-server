@@ -61,9 +61,14 @@
     </table>
 </div>
 <div class="bottomless">
-    <form action="/newTask" method="get">
+    <form action="/newMatchTask" method="get">
         <p>
-            <button type="submit">new task >></button>
+            <button type="submit">new face match task >></button>
+        </p>
+    </form>
+    <form action="/newFuzzyTask" method="get">
+        <p>
+            <button type="submit">new fuzzy search task >></button>
         </p>
     </form>
 </div>
@@ -79,16 +84,26 @@
                 url:"/taskList",
                 dataType:"json",
                 success:function(data){
-                    var tableData = "<tr style='width:1000px'><th>taskID</th><th>startTime</th><th>status</th><th>operation</th></tr>";
+                    var tableData = "<tr style='width:1000px'><th>taskID</th><th>taskType</th><th>videoUrl</th><th>startTime</th><th>status</th><th>operation</th></tr>";
                     for(var i=0;i<data.length;i++){
                         var taskID = data[i].taskID;
+                        var taskType = "unknown";
+                        var taskNum = "0";
+                        if(data[i].taskType=="0"){
+                            taskType="FaceMatch";
+                            taskNum = "0";
+                        }else if(data[i].taskType=="1"){
+                            taskType="FuzzySearch";
+                            taskNum = "1";
+                        }
+                        var videoUrl = data[i].video_url;
                         var submitTime = data[i].submit_time;
                         var status = data[i].status;
-                        tableData+="<tr><td>"+taskID+"</td>\
+                        tableData+="<tr><td>"+taskID+"</td><td>"+taskType+"</td><td>"+videoUrl+"</td>\
                                     <td>"+submitTime+"</td><td>"+status+"</td>\
-                                    <td><form action='/taskInfo/"+taskID+"' method='get'>\
+                                    <td><form action='/taskInfo/"+taskNum+"/"+taskID+"' method='get'>\
                                     <p style='float:left;'><button type='submit'>info</button></p>\
-                                    </form><form action='/killTask/"+taskID+"' method='get'>\
+                                    </form><form action='/killTask/"+taskNum+"/"+taskID+"' method='get'>\
                                     <p style='float:left;'><button type='submit'>kill</button></p>\
                                     </form></td></tr>";
                 }

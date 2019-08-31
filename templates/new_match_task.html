@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>NEW TASK</title>
+    <title>NEW MATCH TASK</title>
     <style type="text/css">
         p,input,legend,div{
             text-align: center;
@@ -29,13 +29,6 @@
             top: 50%;
         }
 
-
-
-
-
-
-
-
     </style>
 </head>
 <body>
@@ -43,7 +36,7 @@
 <p style="color:red">{{ message }}</p>
 {% endif %}
 <p style="color: orange">please upload wanted people images and input an watcher video url and matchMinThreshold</p>
-<form action="/newTask" method="post" enctype=multipart/form-data class="topless">
+<form action="/newMatchTask" method="post" enctype=multipart/form-data class="topless">
 
     <div>
         <input name="file1" type="file">

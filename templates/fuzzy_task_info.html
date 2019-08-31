@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>fuzzy task info</title>
     <style type="text/css">
         p,input,legend,div{
             text-align: center;
@@ -16,7 +16,7 @@
             font-family: 'Microsoft YaHei UI'
         }
         body{
-            background:url(../static/robot.png)  no-repeat center bottom;
+            background:url(/static/robot.png)  no-repeat center bottom;
             background-attachment:fixed;
             background-color: #46cca7;
 			}
@@ -28,15 +28,6 @@
             position: absolute;
             left: 5%;
         }
-
-
-
-
-
-
-
-
-
 
 
     </style>
@@ -58,15 +49,14 @@
     <p align="left">submit time: {{ submitTime }}</p>
     <p align="left">status: {{ status }}</p>
     <p align="left">video url: {{ videoUrl }}</p>
-    <p align="left">match users: {{ user_ids }}</p>
-    <p align="left">match min threshold: {{ matchMinThreshold }}</p>
+    <p align="left">search condition: {{ searchCondition }}</p>
     <p align="left">description: {{ description }}</p>
 
 </div>
 <div class="leftless" style="top: 40%">
     <table style="color: white" width="1000" border="1" cellpadding="10">
-        <caption style="color: white">match frames</caption>
-        <tbody id="matchList">
+        <caption style="color: white">fuzzy search result</caption>
+        <tbody id="fuzzyList">
         </tbody>
 
     </table>
@@ -78,7 +68,7 @@
     $('#btn_kill').click(function(){
         $.ajax({
             type:"delete",
-            url:"/killTask/{{ taskID }}",
+            url:"/killTask/1/{{ taskID }}",
             dataType:"json",
             success:function(data){
                 alert(data.message)
@@ -88,23 +78,17 @@
     window.onload=function(){
         $.ajax({
             type:"get",
-            url:"/queryMatchData/{{ taskID }}",
+            url:"/queryMatchData/1/{{ taskID }}",
             dataType:"json",
             success:function(data){
-                var tableData = "<tr style='width:2500px'><th>image</th><th>time</th><th>description</th>";
+                var tableData = "<tr style='width:2500px'><th>image</th><th>time</th>";
                 for(var i=0;i<data.length;i++){
                     var url = data[i].imagePath;
                     var eventTime = data[i].eventTime;
-                    var desc = data[i].matches;
-                    var descDiv = ""
-                    for(var j=0;j<desc.length;j++){
-                        descDiv += "<p>"+ desc[j].user_id+", "+desc[j].user_info+", "+desc[j].score+"</p>"
-                    }
                     tableData += "<tr><td><img src="+url+"></td>\
-                        <td>" + eventTime + "</td>\
-                        <td>" + descDiv + "</td>"
+                        <td>" + eventTime + "</td>"
                 }
-                $("#matchList").html(tableData);
+                $("#fuzzyList").html(tableData);
             }
         })
     }

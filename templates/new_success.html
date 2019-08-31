@@ -32,7 +32,7 @@
 </head>
 <body>
 <h1 style="color: white">create task success, taskID: {{ taskID }}</h1>
-<form action="/taskInfo/{{ taskID }}" method="get">
+<form action="/taskInfo/{{ taskType}}/{{ taskID }}" method="get">
     <p>
         <button type="submit">see task info</button>
     </p>

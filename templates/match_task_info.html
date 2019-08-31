@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>match task info</title>
+    <style type="text/css">
+        p,input,legend,div{
+            text-align: center;
+            font-family: 'Microsoft YaHei UI'
+        }
+        button{
+            text-align: center;
+            background-color: bisque;
+            color: darkgoldenrod;
+            <!--font-size: larger;-->
+            font-family: 'Microsoft YaHei UI'
+        }
+        body{
+            background:url(/static/robot.png)  no-repeat center bottom;
+            background-attachment:fixed;
+            background-color: #46cca7;
+			}
+		.topless {
+            position: absolute;
+            top: 5%;
+        }
+        .leftless {
+            position: absolute;
+            left: 5%;
+        }
+
+
+
+
+
+
+
+
+
+
+
+    </style>
+</head>
+<body>
+<div class="leftless" style="top: 5%">
+    <form action="/" method="get" style="float:left;">
+        <p>
+            <button type="submit">back task list</button>
+        </p>
+    </form>
+    <p style="float:left;">
+        <button type="submit" id="btn_kill">kill task</button>
+    </p>
+</div>
+
+<h1 style="color: white;top: 10%" class="leftless">taskID: {{ taskID }}</h1>
+<div style="color: white;top: 15%" class="leftless">
+    <p align="left">submit time: {{ submitTime }}</p>
+    <p align="left">status: {{ status }}</p>
+    <p align="left">video url: {{ videoUrl }}</p>
+    <p align="left">match users: {{ user_ids }}</p>
+    <p align="left">match min threshold: {{ matchMinThreshold }}</p>
+    <p align="left">description: {{ description }}</p>
+
+</div>
+<div class="leftless" style="top: 40%">
+    <table style="color: white" width="1000" border="1" cellpadding="10">
+        <caption style="color: white">match frames</caption>
+        <tbody id="matchList">
+        </tbody>
+
+    </table>
+</div>
+</body>
+
+<script src="/static/js/jquery.js"></script>
+<script type="text/javascript">
+    $('#btn_kill').click(function(){
+        $.ajax({
+            type:"delete",
+            url:"/killTask/0/{{ taskID }}",
+            dataType:"json",
+            success:function(data){
+                alert(data.message)
+            }
+        })
+    });
+    window.onload=function(){
+        $.ajax({
+            type:"get",
+            url:"/queryMatchData/0/{{ taskID }}",
+            dataType:"json",
+            success:function(data){
+                var tableData = "<tr style='width:2500px'><th>image</th><th>time</th><th>description</th>";
+                for(var i=0;i<data.length;i++){
+                    var url = data[i].imagePath;
+                    var eventTime = data[i].eventTime;
+                    var desc = data[i].matches;
+                    var descDiv = ""
+                    for(var j=0;j<desc.length;j++){
+                        descDiv += "<p>"+ desc[j].user_id+", "+desc[j].user_info+", "+desc[j].score+"</p>"
+                    }
+                    tableData += "<tr><td><img src="+url+"></td>\
+                        <td>" + eventTime + "</td>\
+                        <td>" + descDiv + "</td>"
+                }
+                $("#matchList").html(tableData);
+            }
+        })
+    }
+
+
+
+
+
+
+
+
+
+</script>
+
+</html>
