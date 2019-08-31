@@ -9,8 +9,13 @@ class Config:
 
 
 config = Config()
+<<<<<<< HEAD
 config.db_user = ''
 config.db_pwd = ''
+=======
+config.db_user = 
+config.db_pwd = 
+>>>>>>> d627fa08c547e3509ac0b52e43465db262f09318
 config.db_host = 'stand-server'
 config.ai_db = 'AI5'
 config.task_table = 't_tasks'
