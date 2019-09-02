@@ -35,7 +35,7 @@
 {% if message %}
 <p style="color:red">{{ message }}</p>
 {% endif %}
-<p style="color: orange">please upload wanted people images and input an watcher video url and matchMinThreshold</p>
+<p style="color: orange">please upload wanted people images and input an watcher video/rstp url and matchMinThreshold</p>
 <form action="/newMatchTask" method="post" enctype=multipart/form-data class="topless">
 
     <div>
@@ -55,6 +55,8 @@
         <!--</p>-->
     </div>
     <p><input name="videoUrl" placeholder="videoUrl" size="100"></p>
+    <p style="color: orange">or</p>
+    <p><input name="rtspUrl" placeholder="rtspUrl" size="100"></p>
     <p><input name="matchThreshold" placeholder="matchThreshold"></p>
     <p><input name="description" placeholder="description" size="100"></p>
     <p>

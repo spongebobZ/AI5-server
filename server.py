@@ -37,7 +37,8 @@ def match_task_new():
     if request.method == 'GET':
         return render_template('new_match_task.html')
     elif request.method == 'POST':
-        video_url = request.form['videoUrl']
+        video_url, source_kind = request.form['rtspUrl'] and (request.form['rtspUrl'], 0) or \
+                                 (request.form['videoUrl'], 1)
         match_threshold = int(request.form['matchThreshold'])
         desc = request.form.get('description')
         if not video_url or not match_threshold:
@@ -51,7 +52,7 @@ def match_task_new():
         process_result = process_images(r.get('images'))
         match_db = process_result['db_name']
         user_ids = ','.join(process_result['user_ids'])
-        push_result = push_task(video_url, 0, desc,
+        push_result = push_task(source_kind, video_url, 0, desc,
                                 **{'match_dbs': match_db, 'match_min_threshold': match_threshold, 'user_ids': user_ids})
         task_id = push_result.get('taskID')
         if not task_id:
@@ -66,7 +67,8 @@ def fuzzy_task_new():
     if request.method == 'GET':
         return render_template('new_fuzzy_task.html')
     elif request.method == 'POST':
-        video_url = request.form['videoUrl']
+        video_url, source_kind = request.form['rtspUrl'] and (request.form['rtspUrl'], 0) or \
+                                 (request.form['videoUrl'], 1)
         age_low = request.form.get('age_low') == '' and -1 or int(request.form.get('age_low'))
         age_high = request.form.get('age_high') == '' and -1 or int(request.form.get('age_high'))
         beauty_low = request.form.get('beauty_low') == '' and -1 or int(request.form.get('beauty_low'))
@@ -90,7 +92,7 @@ def fuzzy_task_new():
         if desc and re.match(r'[a-zA-Z0-9_,\s]+', desc).string != desc:
             return render_template('new_match_task.html',
                                    message='task description only accept letters, nums, _/, and space')
-        push_result = push_task(video_url, 1, desc, **{'search_condition': json.dumps(search_condition)})
+        push_result = push_task(source_kind, video_url, 1, desc, **{'search_condition': json.dumps(search_condition)})
         task_id = push_result.get('taskID')
         if not task_id:
             return render_template('new_fuzzy_task.html', message='create task failed')

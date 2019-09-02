@@ -1,5 +1,6 @@
 import base64
 import json
+import re
 import time
 import requests
 import os
@@ -13,10 +14,13 @@ from cfg import config
 from tools import interface_log
 from sql_manager import select, insert, update
 
+transform_url_r = re.compile(r'\d{1,3}.\d{1,3}')
+
 
 @interface_log('NEW TASK')
-def push_task(video_address, task_kind, task_desc='', **task_config):
+def push_task(source_kind, video_address, task_kind, task_desc='', **task_config):
     """
+    :param source_kind:
     :param video_address:
     :param task_kind:
     :param task_desc:
@@ -41,14 +45,18 @@ def push_task(video_address, task_kind, task_desc='', **task_config):
         user_ids = 'user_ids' in task_config and task_config.pop('user_ids') or None
         if task_config:
             return {'error': 'unsupported config %s' % str(task_config.keys())}
-        command_result = os.system('cd %s && sh ./%s %s %s %s %s %s' % (
-            config.ai_home, config.push_task_script, video_address, 0, new_task_id, match_dbs, match_min_threshold))
+        command_result = os.system('cd %s && sh ./%s %s %s %s %s %s %s' % (
+            config.ai_home, config.push_task_script, source_kind, video_address, 0, new_task_id, match_dbs,
+            match_min_threshold))
         assert command_result == 0, 'push task failed: %s' % command_result
         command_result_get_id = subprocess.getstatusoutput(
             "cat %s/%s | grep driver-|head -1|awk '{print $9}'" % (config.ai_home, config.spark_log))
         assert command_result_get_id[0] == 0, 'get driver id failed: %s' % str(command_result_get_id)
         driver_id = command_result_get_id[1]
         lock.release()
+        video_address = int(source_kind) == 0 and video_address.replace(
+            video_address[video_address.find('//') + 2:transform_url_r.search(video_address).span()[1]],
+            '***') or video_address
         insert(config.task_table,
                **{'taskID': new_task_id, 'taskType': 0, 'appID': driver_id, 'status': 'RUNNING',
                   'submit_time': time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time())),
@@ -62,8 +70,9 @@ def push_task(video_address, task_kind, task_desc='', **task_config):
             raise e
         if task_config:
             return {'error': 'unsupported config %s' % str(task_config.keys())}
-        command_result = os.system('cd %s && sh ./%s %s %s %s %s' % (
-            config.ai_home, config.push_task_script, video_address, 1, new_task_id, json.dumps(search_condition)))
+        command_result = os.system('cd %s && sh ./%s %s %s %s %s %s' % (
+            config.ai_home, config.push_task_script, source_kind, video_address, 1, new_task_id,
+            json.dumps(search_condition)))
         assert command_result == 0, 'push task failed: %s' % command_result
         command_result_get_id = subprocess.getstatusoutput(
             "cat %s/%s | grep driver-|head -1|awk '{print $9}'" % (config.ai_home, config.spark_log))
@@ -85,12 +94,18 @@ def kill_task(task_id):
     :param task_id:
     :return:
     """
-    query_rs = select(config.task_table, 'appID', **{'taskID': task_id})
+    query_rs = select(config.task_table, 'appID', 'sourceType', 'video_url', **{'taskID': task_id})
     assert query_rs, 'not exist task id: %s' % task_id
-    driver_id = query_rs[0]
+    driver_id, source_type, source_url = query_rs[0], query_rs[1], query_rs[2]
     delete_rsp = requests.post(config.kill_task_uri, data={'id': driver_id, 'terminate': True})
     assert delete_rsp.status_code == 200, 'http error: %s' % delete_rsp.status_code
-    command_result = os.system('cd %s && sh ./%s %s' % (config.ai_home, config.kill_task_script, task_id))
+    if int(source_type) == 0:
+        command_result = os.system(
+            'cd %s && sh ./%s %s %s' % (config.ai_home, config.kill_task_script, task_id,
+                                        source_url[source_url.rfind('*') + 1:]))
+    else:
+        command_result = os.system(
+            'cd %s && sh ./%s %s' % (config.ai_home, config.kill_task_script, task_id))
     assert command_result == 0, 'clean task failed:%s' % task_id
     sql_result = update(config.task_table, {'status': 'KILLED'}, **{'taskID': task_id})
     assert sql_result == 1, 'update multi record: %s' % sql_result
@@ -191,5 +206,5 @@ def query_es_data(task_type, task_id):
 
 
 if __name__ == '__main__':
-    r = query_es_data(1,'000009')
+    r = query_es_data(1, '000009')
     print(r)
