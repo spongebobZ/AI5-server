@@ -60,8 +60,8 @@ def push_task(source_kind, video_address, task_kind, task_desc='', **task_config
         insert(config.task_table,
                **{'taskID': new_task_id, 'taskType': 0, 'appID': driver_id, 'status': 'RUNNING',
                   'submit_time': time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time())),
-                  'video_url': video_address, 'match_dbs': match_dbs, 'match_min_threshold': match_min_threshold,
-                  'task_desc': task_desc, 'user_ids': user_ids})
+                  'sourceType': str(source_kind),'video_url': video_address, 'match_dbs': match_dbs,
+                  'match_min_threshold': match_min_threshold,'task_desc': task_desc, 'user_ids': user_ids})
     elif task_kind == 1:
         try:
             search_condition = task_config.pop('search_condition')
@@ -79,10 +79,14 @@ def push_task(source_kind, video_address, task_kind, task_desc='', **task_config
         assert command_result_get_id[0] == 0, 'get driver id failed: %s' % str(command_result_get_id)
         driver_id = command_result_get_id[1]
         lock.release()
+        video_address = int(source_kind) == 0 and video_address.replace(
+            video_address[video_address.find('//') + 2:transform_url_r.search(video_address).span()[1]],
+            '***') or video_address
         insert(config.task_table,
                **{'taskID': new_task_id, 'taskType': 1, 'appID': driver_id, 'status': 'RUNNING',
                   'submit_time': time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time())),
-                  'video_url': video_address, 'search_condition': search_condition, 'task_desc': 'aaadedc'})
+                  'sourceType': str(source_kind), 'video_url': video_address, 'search_condition': search_condition,
+                  'task_desc': 'aaadedc'})
     else:
         return {'error': 'unsupported task type %s' % task_kind}
     return {'taskID': new_task_id}
