@@ -9,8 +9,8 @@ class Config:
 
 
 config = Config()
-config.db_user = ''
-config.db_pwd = ''
+config.db_user = 'tester'
+config.db_pwd = '24.a6bcbbe08994a0ecdd83ec252185f9ba.2592000.1567926490.282335-16745497'
 config.db_host = 'stand-server'
 config.ai_db = 'AI5'
 config.task_table = 't_tasks'

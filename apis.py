@@ -2,6 +2,8 @@ import base64
 import json
 import re
 import time
+
+import elasticsearch
 import requests
 import os
 import subprocess
@@ -60,8 +62,8 @@ def push_task(source_kind, video_address, task_kind, task_desc='', **task_config
         insert(config.task_table,
                **{'taskID': new_task_id, 'taskType': 0, 'appID': driver_id, 'status': 'RUNNING',
                   'submit_time': time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time())),
-                  'sourceType': str(source_kind),'video_url': video_address, 'match_dbs': match_dbs,
-                  'match_min_threshold': match_min_threshold,'task_desc': task_desc, 'user_ids': user_ids})
+                  'sourceType': str(source_kind), 'video_url': video_address, 'match_dbs': match_dbs,
+                  'match_min_threshold': match_min_threshold, 'task_desc': task_desc, 'user_ids': user_ids})
     elif task_kind == 1:
         try:
             search_condition = task_config.pop('search_condition')
@@ -86,7 +88,7 @@ def push_task(source_kind, video_address, task_kind, task_desc='', **task_config
                **{'taskID': new_task_id, 'taskType': 1, 'appID': driver_id, 'status': 'RUNNING',
                   'submit_time': time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time())),
                   'sourceType': str(source_kind), 'video_url': video_address, 'search_condition': search_condition,
-                  'task_desc': 'aaadedc'})
+                  'task_desc': task_desc})
     else:
         return {'error': 'unsupported task type %s' % task_kind}
     return {'taskID': new_task_id}
@@ -100,7 +102,7 @@ def kill_task(task_id):
     """
     query_rs = select(config.task_table, 'appID', 'sourceType', 'video_url', **{'taskID': task_id})
     assert query_rs, 'not exist task id: %s' % task_id
-    driver_id, source_type, source_url = query_rs[0], query_rs[1], query_rs[2]
+    driver_id, source_type, source_url = query_rs[0][0], query_rs[0][1], query_rs[0][2]
     delete_rsp = requests.post(config.kill_task_uri, data={'id': driver_id, 'terminate': True})
     assert delete_rsp.status_code == 200, 'http error: %s' % delete_rsp.status_code
     if int(source_type) == 0:
@@ -142,7 +144,7 @@ def process_images(images):
     return {'db_name': db_name, 'user_ids': user_ids}
 
 
-# @interface_log('LIST TASKS')
+@interface_log('LIST TASKS')
 def list_tasks():
     """
     :return:[{'taskID':taskID1,...},{'taskID':taskID2,...},...]
@@ -176,7 +178,7 @@ def query_task(task_type, task_id):
     return dict(zip(select_keys, task[0]))
 
 
-# @interface_log('QUERY MATCH DATA')
+@interface_log('QUERY MATCH DATA')
 def query_es_data(task_type, task_id):
     """
     :param task_type:
@@ -184,7 +186,10 @@ def query_es_data(task_type, task_id):
     :return:[{match_frame1},{match_frame2}]
     """
     es = Elasticsearch(hosts=config.es_host, port=config.es_port)
-    r = es.search(index=task_id, params={'size': 10000})
+    try:
+        r = es.search(index=task_id, params={'size': 10000})
+    except elasticsearch.exceptions.NotFoundError:
+        return {}
     assert r, 'query match data failed: %s' % r
     result = r['hits']['hits']
     all_result = [{}] * r['hits']['total']
@@ -210,5 +215,5 @@ def query_es_data(task_type, task_id):
 
 
 if __name__ == '__main__':
-    r = query_es_data(1, '000009')
+    r = kill_task('000019')
     print(r)
