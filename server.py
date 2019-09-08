@@ -39,7 +39,7 @@ def match_task_new():
     elif request.method == 'POST':
         video_url, source_kind = request.form['rtspUrl'] and (request.form['rtspUrl'], 0) or \
                                  (request.form['videoUrl'], 1)
-        match_threshold = int(request.form['matchThreshold'])
+        match_threshold = request.form['matchThreshold'] and int(request.form['matchThreshold']) or None
         desc = request.form.get('description')
         if not video_url or not match_threshold:
             return render_template('new_match_task.html', message='please input complete')
@@ -99,6 +99,35 @@ def fuzzy_task_new():
         return render_template('new_success.html', taskType=1, taskID=task_id)
 
 
+@app.route('/newStrangerTask', methods=['GET', 'POST'])
+def stranger_task_new():
+    # """debug"""
+    # return render_template('new_success.html', taskID='000001')
+    if request.method == 'GET':
+        return render_template('new_stranger_task.html')
+    elif request.method == 'POST':
+        video_url, source_kind = request.form['rtspUrl'] and (request.form['rtspUrl'], 0) or \
+                                 (request.form['videoUrl'], 1)
+        stranger_threshold = request.form['strangerThreshold'] and int(request.form['strangerThreshold']) or None
+        desc = request.form.get('description')
+        if not video_url or not stranger_threshold:
+            return render_template('new_stranger_task.html', message='please input complete')
+        if desc and re.match(r'[a-zA-Z0-9_,\s]+', desc).string != desc:
+            return render_template('new_stranger_task.html',
+                                   message='task description only accept letters, nums, _/, and space')
+        r = upload_image().json
+        if r.get('code') != 0:
+            return render_template('new_stranger_task.html', message='incorrect images')
+        process_result = process_images(r.get('images'))
+        match_db = process_result['db_name']
+        push_result = push_task(source_kind, video_url, 2, desc,
+                                **{'match_dbs': match_db, 'stranger_max_threshold': stranger_threshold})
+        task_id = push_result.get('taskID')
+        if not task_id:
+            return render_template('new_stranger_task.html', message='create task failed')
+        return render_template('new_success.html', taskType=2, taskID=task_id)
+
+
 @app.route('/uploadImg', methods=['POST'])
 def upload_image():
     files = []
@@ -131,6 +160,11 @@ def task_info(task_type, task_id):
         return render_template('fuzzy_task_info.html', taskID=task_id, submitTime=task['submit_time'],
                                status=task['status'],
                                videoUrl=task['video_url'], searchCondition=task['search_condition'],
+                               description=task['task_desc'])
+    elif task_type == 2:
+        return render_template('stranger_task_info.html', taskID=task_id, submitTime=task['submit_time'],
+                               status=task['status'],
+                               videoUrl=task['video_url'], strangerMaxThreshold=task['stranger_max_threshold'],
                                description=task['task_desc'])
 
 

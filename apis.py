@@ -89,6 +89,32 @@ def push_task(source_kind, video_address, task_kind, task_desc='', **task_config
                   'submit_time': time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time())),
                   'sourceType': str(source_kind), 'video_url': video_address, 'search_condition': search_condition,
                   'task_desc': task_desc})
+    elif task_kind == 2:
+        try:
+            match_dbs = task_config.pop('match_dbs')
+            stranger_max_threshold = task_config.pop('stranger_max_threshold')
+        except KeyError as e:
+            print('miss config: %s' % e)
+            raise e
+        if task_config:
+            return {'error': 'unsupported config %s' % str(task_config.keys())}
+        command_result = os.system('cd %s && sh ./%s %s %s %s %s %s %s' % (
+            config.ai_home, config.push_task_script, source_kind, video_address, 2, new_task_id, match_dbs,
+            stranger_max_threshold))
+        assert command_result == 0, 'push task failed: %s' % command_result
+        command_result_get_id = subprocess.getstatusoutput(
+            "cat %s/%s | grep driver-|head -1|awk '{print $9}'" % (config.ai_home, config.spark_log))
+        assert command_result_get_id[0] == 0, 'get driver id failed: %s' % str(command_result_get_id)
+        driver_id = command_result_get_id[1]
+        lock.release()
+        video_address = int(source_kind) == 0 and video_address.replace(
+            video_address[video_address.find('//') + 2:transform_url_r.search(video_address).span()[1]],
+            '***') or video_address
+        insert(config.task_table,
+               **{'taskID': new_task_id, 'taskType': 2, 'appID': driver_id, 'status': 'RUNNING',
+                  'submit_time': time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time())),
+                  'sourceType': str(source_kind), 'video_url': video_address, 'match_dbs': match_dbs,
+                  'stranger_max_threshold': stranger_max_threshold, 'task_desc': task_desc})
     else:
         return {'error': 'unsupported task type %s' % task_kind}
     return {'taskID': new_task_id}
@@ -171,6 +197,9 @@ def query_task(task_type, task_id):
     elif task_type == 1:
         select_keys = (
             'taskID', 'submit_time', 'status', 'video_url', 'search_condition', 'task_desc')
+    elif task_type == 2:
+        select_keys = (
+            'taskID', 'submit_time', 'status', 'video_url', 'match_dbs', 'stranger_max_threshold', 'task_desc')
     else:
         return {'error': 'incorrect task type %s' % task_type}
     task = select(config.task_table, *select_keys, **{'taskID': task_id})
@@ -204,6 +233,12 @@ def query_es_data(task_type, task_id):
                              'imagePath': file_svr_host + e['_source']['imagePath'], 'matches': matches}
             all_result[i] = format_result
     elif int(task_type) == 1:
+        for i, e in enumerate(result):
+            frame_result = e['_source']
+            format_result = {'taskID': frame_result['taskID'], 'eventTime': frame_result['eventTime'],
+                             'imagePath': file_svr_host + frame_result['imagePath']}
+            all_result[i] = format_result
+    elif int(task_type) == 2:
         for i, e in enumerate(result):
             frame_result = e['_source']
             format_result = {'taskID': frame_result['taskID'], 'eventTime': frame_result['eventTime'],

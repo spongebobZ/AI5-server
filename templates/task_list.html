@@ -71,6 +71,11 @@
             <button type="submit">new fuzzy search task >></button>
         </p>
     </form>
+    <form action="/newStrangerTask" method="get">
+        <p>
+            <button type="submit">new stranger alert task >></button>
+        </p>
+    </form>
 </div>
 
 
@@ -95,6 +100,10 @@
                         }else if(data[i].taskType=="1"){
                             taskType="FuzzySearch";
                             taskNum = "1";
+                        }
+                        else if(data[i].taskType=="2"){
+                            taskType="StrangerSearch";
+                            taskNum = "2";
                         }
                         var videoUrl = data[i].video_url;
                         var submitTime = data[i].submit_time;
