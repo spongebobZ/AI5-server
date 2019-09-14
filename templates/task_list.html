@@ -3,13 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <title>TASK LIST</title>
+    <link rel="stylesheet" href="/static/bootstrap/4.3.1/bootstrap.min.css">
     <style type="text/css">
         p,input,legend,div{
             text-align: center;
             font-family: 'Microsoft YaHei UI'
         }
         button{
-            text-align: center;
+            <!--text-align: center;-->
             background-color: bisque;
             color: darkgoldenrod;
             <!--font-size: larger;-->
@@ -34,6 +35,10 @@
             position: absolute;
             top: 25%;
             left: 25%;
+        }.left{
+            position: absolute;
+            top: 25%;
+            left: 5%;
         }
 
     </style>
@@ -53,27 +58,28 @@
 <!--</div>-->
 
 <div class="midheigh">
-    <table style="color: white" width="1000" border="1" cellpadding="10">
-        <caption style="color: white">running tasks</caption>
+    <table  class="table" style="color: white" width="1000" border="1" cellpadding="10">
+        <caption style="color: white;caption-side: top;">running tasks</caption>
+        <thead><tr><th>taskID</th><th>taskType</th><th>videoUrl</th><th>startTime</th><th>status</th><th width="150">operation</th></tr></thead>
         <tbody id="taskList">
         </tbody>
 
     </table>
 </div>
-<div class="bottomless">
+<div class="left">
     <form action="/newMatchTask" method="get">
         <p>
-            <button type="submit">new face match task >></button>
+            <button type="submit" class="btn btn-primary">new face match task >></button>
         </p>
     </form>
     <form action="/newFuzzyTask" method="get">
         <p>
-            <button type="submit">new fuzzy search task >></button>
+            <button type="submit" class="btn btn-primary">new fuzzy search task >></button>
         </p>
     </form>
     <form action="/newStrangerTask" method="get">
         <p>
-            <button type="submit">new stranger alert task >></button>
+            <button type="submit" class="btn btn-primary">new stranger alert task >></button>
         </p>
     </form>
 </div>
@@ -89,7 +95,7 @@
                 url:"/taskList",
                 dataType:"json",
                 success:function(data){
-                    var tableData = "<tr style='width:1000px'><th>taskID</th><th>taskType</th><th>videoUrl</th><th>startTime</th><th>status</th><th>operation</th></tr>";
+                    var tableData = "";
                     for(var i=0;i<data.length;i++){
                         var taskID = data[i].taskID;
                         var taskType = "unknown";
@@ -111,9 +117,9 @@
                         tableData+="<tr><td>"+taskID+"</td><td>"+taskType+"</td><td>"+videoUrl+"</td>\
                                     <td>"+submitTime+"</td><td>"+status+"</td>\
                                     <td><form action='/taskInfo/"+taskNum+"/"+taskID+"' method='get'>\
-                                    <p style='float:left;'><button type='submit'>info</button></p>\
+                                    <p style='float:left;'><button type='submit' class='btn btn-primary'>info</button></p>\
                                     </form><form action='/killTask/"+taskNum+"/"+taskID+"' method='get'>\
-                                    <p style='float:left;'><button type='submit'>kill</button></p>\
+                                    <p style='float:left;'><button type='submit' class='btn btn-primary ml-2'>kill</button></p>\
                                     </form></td></tr>";
                 }
                 $("#taskList").html(tableData);

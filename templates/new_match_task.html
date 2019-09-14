@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>NEW MATCH TASK</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="/static/bootstrap/4.3.1/bootstrap.min.css">
     <style type="text/css">
         p,input,legend,div{
             text-align: center;
@@ -29,40 +31,135 @@
             top: 50%;
         }
 
+
     </style>
 </head>
 <body>
-{% if message %}
-<p style="color:red">{{ message }}</p>
-{% endif %}
-<p style="color: orange">please upload wanted people images and input an watcher video/rstp url and matchMinThreshold</p>
-<form action="/newMatchTask" method="post" enctype=multipart/form-data class="topless">
-
-    <div>
-        <input name="file1" type="file">
-        <input name="file2" type="file">
-        <input name="file3" type="file">
-        <input name="file4" type="file">
-        <input name="file5" type="file">
-        <input name="file6" type="file">
-        <input name="file7" type="file">
-        <input name="file8" type="file">
-        <input name="file9" type="file">
-        <input name="file10" type="file">
-        <!--<input type=submit value=Upload>-->
-        <!--<p>-->
-        <!--<button type="submit">start upload</button>-->
-        <!--</p>-->
+<div class="container">
+    <form action="" method="post" enctype=multipart/form-data class="">
+    {% if message %}
+    <div class="alert alert-danger" role="alert">
+      {{ message }}
     </div>
-    <p><input name="videoUrl" placeholder="videoUrl" size="100"></p>
-    <p style="color: orange">or</p>
-    <p><input name="rtspUrl" placeholder="rtspUrl" size="100"></p>
-    <p><input name="matchThreshold" placeholder="matchThreshold"></p>
-    <p><input name="description" placeholder="description" size="100"></p>
-    <p>
-        <button type="submit">create</button>
-    </p>
-</form>
+    {% endif %}
+    <p style="color: orange">please upload wanted people images and input an watcher video/rstp url and
+    matchMinThreshold</p>
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label text-right">photos</label>
+            <div class="col-sm-10 text-left" id="upload-section">
+                <input class="d-none upload-input" name="file1" type="file">
+                <button type="button" id="upload-btn" class="btn btn-primary">select</button>
+                <div id="images" class="row">
+                    <!--<div class="col-sm-3 py-1"><div class="card"><img class="card-img" src=""></div></div>-->
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="list-group list-group-horizontal justify-content-center">
+              <a class="list-group-item active" id="tab-video-form" data-toggle="list" href="#video-form" role="tab" aria-controls="video">video</a>
+              <a class="list-group-item" id="tab-rtsp-form" data-toggle="list" href="#rtsp-form" role="tab" aria-controls="rtsp">rtsp</a>
+            </div>
+        </div>
+        <div class="tab-content">
+            <div class="tab-pane fade show active" id="video-form" role="tabpanel" aria-labelledby="tab-video-form">
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label text-right" for="videoUrl">videoUrl</label>
+                    <div class="col-sm-10">
+                        <input id="videoUrl" class="form-control" name="videoUrl" placeholder="videoUrl" size="100">
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="rtsp-form" role="tabpanel" aria-labelledby="tab-rtsp-form">
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label text-right" for="rtspUrl">rtspUrl</label>
+                    <div class="col-sm-10">
+                        <input id="rtspUrl" class="form-control" name="rtspUrl" placeholder="rtspUrl" size="100">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label text-right" for="matchThreshold">matchThreshold</label>
+            <div class="col-sm-10">
+                <input id="matchThreshold" class="form-control" name="matchThreshold" placeholder="matchThreshold"
+                       size="100">
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label text-right" for="description">description</label>
+            <div class="col-sm-10">
+                <input id="description" class="form-control" name="description" placeholder="description" size="100">
+            </div>
+        </div>
+            <div class="text-center">
+                <button type="submit" class="btn btn-primary">create</button>
+            </div>
+    </form>
+</div>
+<!--<form action="/newMatchTask" method="post" enctype=multipart/form-data class="topless">-->
+
+<!--<div>-->
+<!--<input name="file1" type="file">-->
+<!--<input name="file2" type="file">-->
+<!--<input name="file3" type="file">-->
+<!--<input name="file4" type="file">-->
+<!--<input name="file5" type="file">-->
+<!--<input name="file6" type="file">-->
+<!--<input name="file7" type="file">-->
+<!--<input name="file8" type="file">-->
+<!--<input name="file9" type="file">-->
+<!--<input name="file10" type="file">-->
+<!--&lt;!&ndash;<input type=submit value=Upload>&ndash;&gt;-->
+<!--&lt;!&ndash;<p>&ndash;&gt;-->
+<!--&lt;!&ndash;<button type="submit">start upload</button>&ndash;&gt;-->
+<!--&lt;!&ndash;</p>&ndash;&gt;-->
+<!--</div>-->
+<!--<p><input name="videoUrl" placeholder="videoUrl" size="100"></p>-->
+<!--<p style="color: orange">or</p>-->
+<!--<p><input name="rtspUrl" placeholder="rtspUrl" size="100"></p>-->
+<!--<p><input name="matchThreshold" placeholder="matchThreshold"></p>-->
+<!--<p></p>-->
+<!--<p>-->
+<!--<button type="submit">create</button>-->
+<!--</p>-->
+<!--</form>-->
 
 </body>
+<script src="/static/js/jquery.js"></script>
+<script src="/static/bootstrap/4.3.1/bootstrap.min.js"></script>
+<script type="text/javascript">
+    $(function(){
+        $("#upload-btn").click(function(){
+            $(this).siblings('input').click()
+        })
+        $("#upload-section").on('change', '.upload-input', function(e){
+            var files = e.target.files;
+            var $input = $(this)
+            var $imageItem = $('<div class="col-sm-3 py-2"><div class="card"><img class="card-img" src=""></div></div>')
+            var currId = $('#images .col-sm-3').length + 2
+            var $newInput;
+
+            if (!this.value){
+                return
+            }
+            $newInput = $input.clone().val('')
+            $input.after($newInput)
+            $newInput.attr('name', 'file' + currId)
+            $imageItem.append($input)
+            if (files && files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (evt) {
+                   $imageItem.find('img').attr('src', evt.target.result);
+                }
+                reader.readAsDataURL(files[0]);
+            } else { // 兼容IE8, IE9
+                $imageItem.find('img').remove()
+                $imageItem.find('.card').attr('style', "filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=scale,src=" + $input[0].value + ");width: 80px");
+            }
+            $("#images").append($imageItem)
+        })
+    })
+
+</script>
 </html>

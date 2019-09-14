@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>NEW FUZZY TASK</title>
+    <link rel="stylesheet" href="/static/bootstrap/4.3.1/bootstrap.min.css">
     <style type="text/css">
         p,input,legend,div{
             text-align: center;
@@ -36,166 +37,234 @@
 <p style="color:red">{{ message }}</p>
 {% endif %}
 <p style="color: orange">please input an watcher video url and select search conditions</p>
-<form action="/newFuzzyTask" method="post" class="topless">
-    <p><input name="videoUrl" placeholder="videoUrl" size="100"></p>
-    <p style="color: orange">or</p>
-    <p><input name="rtspUrl" placeholder="rtspUrl" size="100"></p>
-    <p><input name="age_low" placeholder="ageLow" size="10" style="float:left;"></p>
-    <p><input name="age_high" placeholder="ageHigh" size="10" style="float:left;"></p>
-    <p><input name="beauty_low" placeholder="beautyLow" size="10" style="float:left;"></p>
-    <p><input name="beauty_high" placeholder="beautyHigh" size="10" style="float:left;"></p>
-    <br/>
-    <div>
-        <p>faceshape</p>
-        <label>
-            all
-            <input type="radio" checked="checked" name="faceshape" value="all"/>
-        </label>
-        <label>
-            square
-            <input type="radio" name="faceshape" value="square"/>
-        </label>
-        <label>
-            triangle
-            <input type="radio" name="faceshape" value="triangle"/>
-        </label>
-        <label>
-            oval
-            <input type="radio" name="faceshape" value="oval"/>
-        </label>
-        <label>
-            heart
-            <input type="radio" name="faceshape" value="heart"/>
-        </label>
-        <label>
-            round
-            <input type="radio" name="faceshape" value="round"/>
-        </label>
-    </div>
-    <br/>
-    <div>
-        <p>expression</p>
-        <label>
-            all
-            <input type="radio" checked="checked" name="expression" value="all"/>
-        </label>
-        <label>
-            none
-            <input type="radio" name="expression" value="none"/>
-        </label>
-        <label>
-            smile
-            <input type="radio" name="expression" value="smile"/>
-        </label>
-        <label>
-            laugh
-            <input type="radio" name="expression" value="laugh"/>
-        </label>
+<div class="container">
+    <form action="/newFuzzyTask" method="post" enctype=multipart/form-data class="">
 
+    <div class="form-group">
+        <div class="list-group list-group-horizontal justify-content-center">
+          <a class="list-group-item active" id="tab-video-form" data-toggle="list" href="#video-form" role="tab" aria-controls="video">video</a>
+          <a class="list-group-item" id="tab-rtsp-form" data-toggle="list" href="#rtsp-form" role="tab" aria-controls="rtsp">rtsp</a>
+        </div>
     </div>
-    <br/>
-    <div>
-        <p>gender</p>
-        <label>
-            all
-            <input type="radio" checked="checked" name="gender" value="all" />
-        </label>
-        <label>
-            male
-            <input type="radio" name="gender" value="male" />
-        </label>
-        <label>
-            female
-            <input type="radio" name="gender" value="female" />
-        </label>
+    <div class="tab-content">
+        <div class="tab-pane fade show active" id="video-form" role="tabpanel" aria-labelledby="tab-video-form">
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label text-right" for="videoUrl">videoUrl</label>
+                <div class="col-sm-10">
+                    <input id="videoUrl" class="form-control" name="videoUrl" placeholder="videoUrl" size="100">
+                </div>
+            </div>
+        </div>
+        <div class="tab-pane fade" id="rtsp-form" role="tabpanel" aria-labelledby="tab-rtsp-form">
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label text-right" for="rtspUrl">rtspUrl</label>
+                <div class="col-sm-10">
+                    <input id="rtspUrl" class="form-control" name="rtspUrl" placeholder="rtspUrl" size="100">
+                </div>
+            </div>
+        </div>
     </div>
-    <br/>
-    <div>
-        <p>glasses</p>
-        <label>
-            all
-            <input type="radio" checked="checked" name="glasses" value="all" />
-        </label>
-        <label>
-            none
-            <input type="radio" name="glasses" value="none" />
-        </label>
-        <label>
-            common
-            <input type="radio" name="glasses" value="common" />
-        </label>
-        <label>
-            sun
-            <input type="radio" name="glasses" value="sun" />
-        </label>
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label text-right" for="age_low">age</label>
+        <div class="col-sm-10">
+          <div class="row">
+            <div class="col-sm-6">
+                <input id="age_low" class="form-control" name="age_low" placeholder="age_low" size="100">
+            </div>
+            <div class="col-sm-6">
+                <input id="age_high" class="form-control" name="age_high" placeholder="age_high" size="100">
+            </div>
+          </div>
+        </div>
     </div>
-    <br/>
-    <div>
-        <p>emotion</p>
-        <label>
-            all
-            <input type="radio" checked="checked" name="emotion" value="all" />
-        </label>
-        <label>
-            angry
-            <input type="radio" name="emotion" value="angry" />
-        </label>
-        <label>
-            disgust
-            <input type="radio" name="emotion" value="disgust" />
-        </label>
-        <label>
-            fear
-            <input type="radio" name="emotion" value="fear" />
-        </label>
-        <label>
-            happy
-            <input type="radio" name="emotion" value="happy" />
-        </label>
-        <label>
-            sad
-            <input type="radio" name="emotion" value="sad" />
-        </label>
-        <label>
-            surprise
-            <input type="radio" name="emotion" value="surprise" />
-        </label>
-        <label>
-            neutral
-            <input type="radio" name="emotion" value="neutral" />
-        </label>
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label text-right" for="beauty_low">beauty</label>
+        <div class="col-sm-10">
+          <div class="row">
+            <div class="col-sm-6">
+                <input id="beauty_low" class="form-control" name="beauty_low" placeholder="beauty_low" size="100">
+            </div>
+            <div class="col-sm-6">
+                <input id="beauty_high" class="form-control" name="beauty_high" placeholder="beauty_high" size="100">
+            </div>
+          </div>
+        </div>
     </div>
-    <br/>
-    <div>
-        <p>race</p>
-        <label>
-            all
-            <input type="radio" checked="checked" name="race" value="all" />
-        </label>
-        <label>
-            yellow
-            <input type="radio" name="race" value="yellow" />
-        </label>
-        <label>
-            white
-            <input type="radio" name="race" value="white" />
-        </label>
-        <label>
-            black
-            <input type="radio" name="race" value="black" />
-        </label>
-        <label>
-            arabs
-            <input type="radio" name="race" value="arabs" />
-        </label>
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label text-right">faceshape</label>
+        <div class="col-sm-10">
+            <div class="form-control">
+                <div class="custom-control custom-radio custom-control-inline">
+                  <input type="radio" id="all" checked="checked" value="all" name="faceshape" class="custom-control-input">
+                  <label class="custom-control-label" for="all">all</label>
+                </div>
+                <div class="custom-control custom-radio custom-control-inline">
+                  <input type="radio" id="square" name="faceshape" value="square" class="custom-control-input">
+                  <label class="custom-control-label" for="square">square</label>
+                </div>
+                <div class="custom-control custom-radio custom-control-inline">
+                  <input type="radio" id="triangle" name="faceshape" value="triangle" class="custom-control-input">
+                  <label class="custom-control-label" for="triangle">triangle</label>
+                </div>
+                <div class="custom-control custom-radio custom-control-inline">
+                  <input type="radio" id="oval" name="faceshape" value="oval" class="custom-control-input">
+                  <label class="custom-control-label" for="oval">oval</label>
+                </div>
+                <div class="custom-control custom-radio custom-control-inline">
+                  <input type="radio" id="heart" name="faceshape" value="heart" class="custom-control-input">
+                  <label class="custom-control-label" for="heart">heart</label>
+                </div>
+                <div class="custom-control custom-radio custom-control-inline">
+                  <input type="radio" id="round" name="faceshape" value="round" class="custom-control-input">
+                  <label class="custom-control-label" for="round">round</label>
+                </div>
+            </div>
+        </div>
     </div>
-
-    <p><input name="description" placeholder="description" size="100"></p>
-    <p>
-        <button type="submit">create</button>
-    </p>
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label text-right">expression</label>
+        <div class="col-sm-10">
+            <div class="form-control">
+                <div class="custom-control custom-radio custom-control-inline">
+                  <input type="radio" id="all-expression" checked="checked" value="all" name="expression" class="custom-control-input">
+                  <label class="custom-control-label" for="all-expression">all</label>
+                </div>
+                <div class="custom-control custom-radio custom-control-inline">
+                  <input type="radio" id="none" name="expression" value="none" class="custom-control-input">
+                  <label class="custom-control-label" for="none">none</label>
+                </div>
+                <div class="custom-control custom-radio custom-control-inline">
+                  <input type="radio" id="smile" name="expression" value="smile" class="custom-control-input">
+                  <label class="custom-control-label" for="smile">smile</label>
+                </div>
+                <div class="custom-control custom-radio custom-control-inline">
+                  <input type="radio" id="laugh" name="expression" value="laugh" class="custom-control-input">
+                  <label class="custom-control-label" for="laugh">laugh</label>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label text-right">gender</label>
+        <div class="col-sm-10">
+            <div class="form-control">
+                <div class="custom-control custom-radio custom-control-inline">
+                  <input type="radio" id="all-gender" checked="checked" value="all" name="gender" class="custom-control-input">
+                  <label class="custom-control-label" for="all-gender">all</label>
+                </div>
+                <div class="custom-control custom-radio custom-control-inline">
+                  <input type="radio" id="male" name="gender" value="male" class="custom-control-input">
+                  <label class="custom-control-label" for="male">male</label>
+                </div>
+                <div class="custom-control custom-radio custom-control-inline">
+                  <input type="radio" id="female" name="gender" value="female" class="custom-control-input">
+                  <label class="custom-control-label" for="female">female</label>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label text-right">expression</label>
+        <div class="col-sm-10">
+            <div class="form-control">
+                <div class="custom-control custom-radio custom-control-inline">
+                  <input type="radio" id="all-glasses" checked="checked" value="all" name="glasses" class="custom-control-input">
+                  <label class="custom-control-label" for="all-glasses">all</label>
+                </div>
+                <div class="custom-control custom-radio custom-control-inline">
+                  <input type="radio" id="none_glasses" name="glasses" value="none" class="custom-control-input">
+                  <label class="custom-control-label" for="none_glasses">none</label>
+                </div>
+                <div class="custom-control custom-radio custom-control-inline">
+                  <input type="radio" id="common" name="glasses" value="common" class="custom-control-input">
+                  <label class="custom-control-label" for="common">common</label>
+                </div>
+                <div class="custom-control custom-radio custom-control-inline">
+                  <input type="radio" id="sun" name="glasses" value="sun" class="custom-control-input">
+                  <label class="custom-control-label" for="sun">sun</label>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label text-right">emotion</label>
+        <div class="col-sm-10">
+            <div class="form-control">
+                <div class="custom-control custom-radio custom-control-inline">
+                  <input type="radio" id="all-emotion" checked="checked" value="all" name="emotion" class="custom-control-input">
+                  <label class="custom-control-label" for="all-emotion">all</label>
+                </div>
+                <div class="custom-control custom-radio custom-control-inline">
+                  <input type="radio" id="angry" name="emotion" value="angry" class="custom-control-input">
+                  <label class="custom-control-label" for="angry">angry</label>
+                </div>
+                <div class="custom-control custom-radio custom-control-inline">
+                  <input type="radio" id="disgust" name="emotion" value="disgust" class="custom-control-input">
+                  <label class="custom-control-label" for="disgust">disgust</label>
+                </div>
+                <div class="custom-control custom-radio custom-control-inline">
+                  <input type="radio" id="fear" name="emotion" value="fear" class="custom-control-input">
+                  <label class="custom-control-label" for="fear">fear</label>
+                </div>
+                <div class="custom-control custom-radio custom-control-inline">
+                  <input type="radio" id="happy" name="emotion" value="happy" class="custom-control-input">
+                  <label class="custom-control-label" for="happy">happy</label>
+                </div>
+                <div class="custom-control custom-radio custom-control-inline">
+                  <input type="radio" id="sad" name="emotion" value="sad" class="custom-control-input">
+                  <label class="custom-control-label" for="sad">sad</label>
+                </div>
+                <div class="custom-control custom-radio custom-control-inline">
+                  <input type="radio" id="surprise" name="emotion" value="surprise" class="custom-control-input">
+                  <label class="custom-control-label" for="surprise">surprise</label>
+                </div>
+                <div class="custom-control custom-radio custom-control-inline">
+                  <input type="radio" id="neutral" name="emotion" value="neutral" class="custom-control-input">
+                  <label class="custom-control-label" for="neutral">neutral</label>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label text-right">race</label>
+        <div class="col-sm-10">
+            <div class="form-control">
+                <div class="custom-control custom-radio custom-control-inline">
+                  <input type="radio" id="all-race" checked="checked" value="all" name="race" class="custom-control-input">
+                  <label class="custom-control-label" for="all-race">all</label>
+                </div>
+                <div class="custom-control custom-radio custom-control-inline">
+                  <input type="radio" id="yellow" name="race" value="yellow" class="custom-control-input">
+                  <label class="custom-control-label" for="yellow">none</label>
+                </div>
+                <div class="custom-control custom-radio custom-control-inline">
+                  <input type="radio" id="white" name="race" value="white" class="custom-control-input">
+                  <label class="custom-control-label" for="white">white</label>
+                </div>
+                <div class="custom-control custom-radio custom-control-inline">
+                  <input type="radio" id="black" name="race" value="black" class="custom-control-input">
+                  <label class="custom-control-label" for="black">black</label>
+                </div>
+                <div class="custom-control custom-radio custom-control-inline">
+                  <input type="radio" id="arabs" name="race" value="arabs" class="custom-control-input">
+                  <label class="custom-control-label" for="arabs">arabs</label>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label text-right" for="description">description</label>
+        <div class="col-sm-10">
+            <input id="description" class="form-control" name="description" placeholder="description" size="100">
+        </div>
+    </div>
+    <div class="text-center">
+        <button type="submit" class="btn btn-primary">create</button>
+    </div>
 </form>
-
+</div>
 
 </body>
+<script src="/static/js/jquery.js"></script>
+<script src="/static/bootstrap/4.3.1/bootstrap.min.js"></script>
 </html>

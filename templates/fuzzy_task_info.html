@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>fuzzy task info</title>
+    <link rel="stylesheet" href="/static/bootstrap/4.3.1/bootstrap.min.css">
     <style type="text/css">
         p,input,legend,div{
             text-align: center;
@@ -36,11 +37,11 @@
 <div class="leftless" style="top: 5%">
     <form action="/" method="get" style="float:left;">
         <p>
-            <button type="submit">back task list</button>
+            <button type="submit" class="btn btn-primary">back task list</button>
         </p>
     </form>
     <p style="float:left;">
-        <button type="submit" id="btn_kill">kill task</button>
+        <button type="submit" id="btn_kill" class="btn btn-primary ml-2">kill task</button>
     </p>
 </div>
 
@@ -54,8 +55,8 @@
 
 </div>
 <div class="leftless" style="top: 40%">
-    <table style="color: white" width="1000" border="1" cellpadding="10">
-        <caption style="color: white">fuzzy search result</caption>
+    <table class="table" style="color: white" width="1000" border="1" cellpadding="10">
+        <caption style="color: white;caption-side: top;">fuzzy search result</caption>
         <tbody id="fuzzyList">
         </tbody>
 
@@ -85,7 +86,7 @@
                 for(var i=0;i<data.length;i++){
                     var url = data[i].imagePath;
                     var eventTime = data[i].eventTime;
-                    tableData += "<tr><td><img src="+url+"></td>\
+                    tableData += "<tr><td><img src="+url+" class='img-fluid'></td>\
                         <td>" + eventTime + "</td>"
                 }
                 $("#fuzzyList").html(tableData);

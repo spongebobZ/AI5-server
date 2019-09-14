@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>match task info</title>
+    <link rel="stylesheet" href="/static/bootstrap/4.3.1/bootstrap.min.css">
     <style type="text/css">
         p,input,legend,div{
             text-align: center;
@@ -45,11 +46,11 @@
 <div class="leftless" style="top: 5%">
     <form action="/" method="get" style="float:left;">
         <p>
-            <button type="submit">back task list</button>
+            <button type="submit" class="btn btn-primary">back task list</button>
         </p>
     </form>
     <p style="float:left;">
-        <button type="submit" id="btn_kill">kill task</button>
+        <button type="submit" id="btn_kill" class="btn btn-primary">kill task</button>
     </p>
 </div>
 
@@ -64,8 +65,8 @@
 
 </div>
 <div class="leftless" style="top: 40%">
-    <table style="color: white" width="1000" border="1" cellpadding="10">
-        <caption style="color: white">match frames</caption>
+    <table class="table" style="color: white" width="1000" border="1" cellpadding="10">
+        <caption style="color: white;caption-side: top;">match frames</caption>
         <tbody id="matchList">
         </tbody>
 
@@ -100,7 +101,7 @@
                     for(var j=0;j<desc.length;j++){
                         descDiv += "<p>"+ desc[j].user_id+", "+desc[j].user_info+", "+desc[j].score+"</p>"
                     }
-                    tableData += "<tr><td><img src="+url+"></td>\
+                    tableData += "<tr><td><img src="+url+" class='img-fluid'></td>\
                         <td>" + eventTime + "</td>\
                         <td>" + descDiv + "</td>"
                 }
